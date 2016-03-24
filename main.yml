@@ -6,7 +6,7 @@
   become: true # sudo
   vars: # hyphens are not allowed
     eclipse_version: 4.3.0
-    mongo_veresion: 2.6.11
+    mongo_veresion: 2.6.12
     robomongo_version: 0.8.5
     scala_repl_version: 2.11.8
   tasks:

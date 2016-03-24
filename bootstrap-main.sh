@@ -14,3 +14,4 @@ ansible-playbook -K main.yml
 
 # cleanup
 rm main.yml
+rm bootstrap-main.sh
