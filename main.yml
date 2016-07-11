@@ -5,31 +5,38 @@
   connection: local # not ssh
   become: true # sudo
   vars: # hyphens are not allowed
-    eclipse_version: 4.4.0
-    mongo_veresion: 2.6.12
+    eclipse_version: 4.4.1
+    eclipse_version_with_bells_and_whistles: '{{eclipse_version}}-vfinal-luna-211-20160504'
+    mongo_version: 2.6.12
     robomongo_version: 0.8.5
     scala_repl_version: 2.11.8
   tasks:
     # repositories, keys, aptitude, apt update and upgrade
-    - name: repositories are present
-      apt_repository: repo={{ item }} state=present
-      with_items:
-        - 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' # mongo
-        - 'deb https://dl.bintray.com/sbt/debian /' # sbt
-        - 'ppa:indicator-multiload/stable-daily' # indicator-multiload
-        - 'ppa:mmk2410/intellij-idea-community' # intellij idea
-        - 'ppa:tortoisehg-ppa/releases' # thg
-        - 'ppa:webupd8team/java' # java
-        - 'ppa:webupd8team/sublime-text-3' # sublime
-
     - name: apt keys are present
       apt_key: keyserver={{item.keyserver}} id={{item.key}} state=present
       with_items:
         - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '7F0CEB10' } # mongo
         - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '642AC823' } # sbt
 
-    - name: aptitude is installed
-      apt: name=aptitude state=present
+    - name: conventional repositories are present
+      apt_repository: repo={{ item }} state=present mode="u=rw,g=r,o=r"
+      with_items:
+        - 'ppa:indicator-multiload/stable-daily' # indicator-multiload
+        - 'ppa:mmk2410/intellij-idea-community' # intellij idea
+        - 'ppa:webupd8team/java' # java
+        - 'ppa:webupd8team/sublime-text-3' # sublime
+
+    - name: mongo repository is present
+      apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present mode="u=rw,g=r,o=r" # mongo
+
+    - name: sbt repository is present
+      apt_repository: repo='deb https://dl.bintray.com/sbt/debian /' state=present mode="u=rw,g=r,o=r" # sbt
+
+    - name: aptitude related software is present
+      apt: name={{ item }} state=present
+      with_items:
+        - aptitude
+        - ppa-purge
 
     - name: apt cache and software is up to date
       apt: update_cache=yes upgrade=safe
@@ -49,41 +56,32 @@
       command: update-java-alternatives -s java-8-oracle
       changed_when: false
 
-    # scala REPL
-    - name: scala REPL debian package is present
-      get_url: url=http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb dest=/tmp/scala-{{scala_repl_version}}.deb
-
-    - name: scala REPL is present
-      apt: deb=/tmp/scala-{{scala_repl_version}}.deb
-
-    # robomongo
-    - name: robomongo debian package is present
-      get_url: url=http://app.robomongo.org/files/linux/robomongo-{{robomongo_version}}-x86_64.deb dest=/tmp/robomongo-{{robomongo_version}}.deb
-
-    - name: robomongo is present
-      apt: deb=/tmp/robomongo-{{robomongo_version}}.deb
+    # debian packages
+    - name: debian packages are present
+      apt: deb={{ item }} only_upgrade=yes
+      with_items:
+        - 'http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb' # scala REPL
+        - 'https://download.robomongo.org/0.8.5/linux/robomongo-{{robomongo_version}}-x86_64.deb' # robomongo
 
     # eclipse
-    - name: eclipse archive is present
-      get_url: url=http://downloads.typesafe.com/scalaide-pack/{{eclipse_version}}-vfinal-luna-211-20151201/scala-SDK-{{eclipse_version}}-vfinal-2.11-linux.gtk.x86_64.tar.gz dest=/tmp/eclipse-{{eclipse_version}}.tar.gz
-
     - name: eclipse is present
-      unarchive: src=/tmp/eclipse-{{eclipse_version}}.tar.gz dest=/opt copy=no
+      unarchive: src=http://downloads.typesafe.com/scalaide-pack/{{eclipse_version_with_bells_and_whistles}}/scala-SDK-{{eclipse_version}}-vfinal-2.11-linux.gtk.x86_64.tar.gz dest=/opt copy=no
 
     # other software
     - name: remaining software is present
-      apt: name={{ item }} state=present
+      apt: name={{ item }} state=present allow_unauthenticated=yes
       with_items:
         - curl
+        - emacs
         - git
         - guake
         - htop
         - indicator-multiload
-        - intellij-idea-community    
+        - intellij-idea-community
         - kdiff3
-        - meld    
+        - meld
         - mercurial
-        - mongodb-org={{mongo_veresion}}
+        - mongodb-org={{mongo_version}}
         - mosh
         - sbt
         - sublime-text-installer
@@ -94,11 +92,14 @@
         - zip
         - zsh
 
+    # https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
+    - copy: src=mongodb.service dest=/etc/systemd/system/mongodb.service owner=root group=root mode="u=rw,g=r,o=r"
+
     # services
     - name: services are running
       service: name={{ item }} state=started enabled=yes
       with_items:
-        - mongod
+        - mongodb
 
     # apt cache update and upgrade
     - name: apt cache and software is up to date
