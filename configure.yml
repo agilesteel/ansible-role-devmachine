@@ -1,0 +1,9 @@
+---
+# this playbook configures the LOCAL DEV machine
+
+- hosts: localhost
+  connection: local # not ssh
+  become: false # not sudo
+  tasks:
+    - name: .ssh folder exists with correct permissions
+      file: path=~/.ssh state=directory owner={{ansible_user_id}} group={{ansible_user_id}} mode="u=rwx,g=,o="
