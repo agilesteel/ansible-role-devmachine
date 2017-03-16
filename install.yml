@@ -61,7 +61,7 @@
       apt: deb={{ item }} only_upgrade=yes
       with_items:
         - 'http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb' # scala REPL
-        - 'https://download.robomongo.org/0.8.5/linux/robomongo-{{robomongo_version}}-x86_64.deb' # robomongo
+        # - 'https://download.robomongo.org/0.8.5/linux/robomongo-{{robomongo_version}}-x86_64.deb' # robomongo
 
     # eclipse
     - name: eclipse is present
