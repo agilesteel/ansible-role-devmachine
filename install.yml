@@ -9,7 +9,7 @@
     eclipse_version_with_bells_and_whistles: '{{eclipse_version}}-vfinal-luna-211-20160504'
     mongo_version: 2.6.12
     robomongo_version: 0.8.5
-    scala_repl_version: 2.11.8
+    scala_repl_version: 2.11.11
   tasks:
     # repositories, keys, aptitude, apt update and upgrade
     - name: apt keys are present
