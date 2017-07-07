@@ -5,8 +5,7 @@
   connection: local # not ssh
   become: true # sudo
   vars: # hyphens are not allowed
-    eclipse_version: 4.4.1
-    eclipse_version_with_bells_and_whistles: '{{eclipse_version}}-vfinal-luna-211-20160504'
+    eclipse_url: http://downloads.typesafe.com/scalaide-pack/4.6.1-vfinal-neon-212-20170609/scala-SDK-4.6.1-vfinal-2.12-linux.gtk.x86_64.tar.gz
     mongo_version: 2.6.12
     robomongo_version: 0.8.5
     scala_repl_version: 2.11.11
@@ -65,7 +64,7 @@
 
     # eclipse
     - name: eclipse is present
-      unarchive: src=http://downloads.typesafe.com/scalaide-pack/{{eclipse_version_with_bells_and_whistles}}/scala-SDK-{{eclipse_version}}-vfinal-2.11-linux.gtk.x86_64.tar.gz dest=/opt copy=no
+      unarchive: src={{eclipse_url}} dest=/opt copy=no
 
     # other software
     - name: remaining software is present
