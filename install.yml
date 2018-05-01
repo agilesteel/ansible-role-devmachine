@@ -5,37 +5,38 @@
   connection: local # not ssh
   become: true # sudo
   vars: # hyphens are not allowed
-    eclipse_url: http://downloads.typesafe.com/scalaide-pack/4.6.1-vfinal-neon-212-20170609/scala-SDK-4.6.1-vfinal-2.12-linux.gtk.x86_64.tar.gz
-    mongo_version: 2.6.12
-    robomongo_version: 0.8.5
-    scala_repl_version: 2.11.11
+    scala_repl_version: 2.12.4
   tasks:
     # repositories, keys, aptitude, apt update and upgrade
-    - name: apt keys are present
+    - name: aptitude related software is present
+      apt: name={{ item }} state=present
+      with_items:
+        - apt-transport-https
+        - aptitude
+        - ppa-purge
+
+    - name: apt keys are present 1
       apt_key: keyserver={{item.keyserver}} id={{item.key}} state=present
       with_items:
         - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '7F0CEB10' } # mongo
         - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '642AC823' } # sbt
 
+    - name: apt keys are present 2
+      apt_key: url={{item.url}} state=present
+      with_items:
+        - { url: 'https://download.sublimetext.com/sublimehq-pub.gpg' } # sublime-text
+        - { url: 'https://packages.microsoft.com/keys/microsoft.asc' } # visual-studio-code
+
     - name: conventional repositories are present
       apt_repository: repo={{ item }} state=present mode="u=rw,g=r,o=r"
       with_items:
+        - 'deb [arch=amd64,arm64] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse' # mongo
+        - 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' # visual-studio-code
+        - 'deb https://dl.bintray.com/sbt/debian /' # sbt
+        - 'deb https://download.sublimetext.com/ apt/stable/' # sublime-text
         - 'ppa:indicator-multiload/stable-daily' # indicator-multiload
         - 'ppa:mmk2410/intellij-idea-community' # intellij idea
         - 'ppa:webupd8team/java' # java
-        - 'ppa:webupd8team/sublime-text-3' # sublime
-
-    - name: mongo repository is present
-      apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' state=present mode="u=rw,g=r,o=r" # mongo
-
-    - name: sbt repository is present
-      apt_repository: repo='deb https://dl.bintray.com/sbt/debian /' state=present mode="u=rw,g=r,o=r" # sbt
-
-    - name: aptitude related software is present
-      apt: name={{ item }} state=present
-      with_items:
-        - aptitude
-        - ppa-purge
 
     - name: apt cache and software is up to date
       apt: update_cache=yes upgrade=safe
@@ -60,16 +61,12 @@
       apt: deb={{ item }} only_upgrade=yes
       with_items:
         - 'http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb' # scala REPL
-        # - 'https://download.robomongo.org/0.8.5/linux/robomongo-{{robomongo_version}}-x86_64.deb' # robomongo
-
-    # eclipse
-    - name: eclipse is present
-      unarchive: src={{eclipse_url}} dest=/opt copy=no
 
     # other software
     - name: remaining software is present
       apt: name={{ item }} state=present allow_unauthenticated=yes
       with_items:
+        - code
         - curl
         - emacs
         - git
@@ -78,12 +75,11 @@
         - indicator-multiload
         - intellij-idea-community
         - kdiff3
-        - meld
         - mercurial
-        - mongodb-org={{mongo_version}}
+        - mongodb-org
         - mosh
         - sbt
-        - sublime-text-installer
+        - sublime-text
         - tortoisehg
         - tree
         - unzip
