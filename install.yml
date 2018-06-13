@@ -18,7 +18,6 @@
     - name: apt keys are present 1
       apt_key: keyserver={{item.keyserver}} id={{item.key}} state=present
       with_items:
-        - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '7F0CEB10' } # mongo
         - { keyserver: 'hkp://keyserver.ubuntu.com:80', key: '642AC823' } # sbt
 
     - name: apt keys are present 2
@@ -30,7 +29,6 @@
     - name: conventional repositories are present
       apt_repository: repo={{ item }} state=present mode="u=rw,g=r,o=r"
       with_items:
-        - 'deb [arch=amd64,arm64] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse' # mongo
         - 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' # visual-studio-code
         - 'deb https://dl.bintray.com/sbt/debian /' # sbt
         - 'deb https://download.sublimetext.com/ apt/stable/' # sublime-text
@@ -76,7 +74,7 @@
         - intellij-idea-community
         - kdiff3
         - mercurial
-        - mongodb-org
+        - mongodb
         - mosh
         - sbt
         - sublime-text
