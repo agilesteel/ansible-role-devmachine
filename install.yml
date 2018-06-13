@@ -46,7 +46,7 @@
     - name: java8 is present
       apt: name={{ item }} state=present # the order is significant
       with_items:
-        - python-software-properties
+        #- python-software-properties
         - oracle-java8-installer
         - oracle-java8-set-default
 
