@@ -33,7 +33,7 @@
         - 'deb https://dl.bintray.com/sbt/debian /' # sbt
         - 'deb https://download.sublimetext.com/ apt/stable/' # sublime-text
         #- 'ppa:indicator-multiload/stable-daily' # indicator-multiload
-        - 'ppa:mmk2410/intellij-idea-community' # intellij idea
+        #- 'ppa:mmk2410/intellij-idea-community' # intellij idea
         - 'ppa:webupd8team/java' # java
 
     - name: apt cache and software is up to date
@@ -71,7 +71,7 @@
         - guake
         - htop
         #- indicator-multiload
-        - intellij-idea-community
+        #- intellij-idea-community
         - kdiff3
         - mercurial
         - mongodb
