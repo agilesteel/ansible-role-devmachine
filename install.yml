@@ -32,7 +32,7 @@
         - 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' # visual-studio-code
         - 'deb https://dl.bintray.com/sbt/debian /' # sbt
         - 'deb https://download.sublimetext.com/ apt/stable/' # sublime-text
-        - 'ppa:indicator-multiload/stable-daily' # indicator-multiload
+        #- 'ppa:indicator-multiload/stable-daily' # indicator-multiload
         - 'ppa:mmk2410/intellij-idea-community' # intellij idea
         - 'ppa:webupd8team/java' # java
 
@@ -70,7 +70,7 @@
         - git
         - guake
         - htop
-        - indicator-multiload
+        #- indicator-multiload
         - intellij-idea-community
         - kdiff3
         - mercurial
@@ -84,9 +84,6 @@
         - vim
         - zip
         - zsh
-
-    # https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
-    - copy: src=mongodb.service dest=/etc/systemd/system/mongodb.service owner=root group=root mode="u=rw,g=r,o=r"
 
     # services
     - name: services are running
