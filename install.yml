@@ -59,14 +59,20 @@
       apt: deb={{ item }} only_upgrade=yes
       with_items:
         - 'http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb' # scala REPL
-
+    # intellij-idea
+    - name: intellij-idea is present
+      command: sudo snap install intellij-idea-community --classic
+      changed_when: false
+      
     # other software
     - name: remaining software is present
       apt: name={{ item }} state=present allow_unauthenticated=yes
       with_items:
         - code
         - curl
+        - gnome-tweaks
         - emacs
+        - fonts-firacode
         - git
         - guake
         - htop
