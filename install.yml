@@ -32,8 +32,6 @@
         - 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main' # visual-studio-code
         - 'deb https://dl.bintray.com/sbt/debian /' # sbt
         - 'deb https://download.sublimetext.com/ apt/stable/' # sublime-text
-        #- 'ppa:indicator-multiload/stable-daily' # indicator-multiload
-        #- 'ppa:mmk2410/intellij-idea-community' # intellij idea
         - 'ppa:webupd8team/java' # java
 
     - name: apt cache and software is up to date
@@ -46,7 +44,6 @@
     - name: java8 is present
       apt: name={{ item }} state=present # the order is significant
       with_items:
-        #- python-software-properties
         - oracle-java8-installer
         - oracle-java8-set-default
 
@@ -59,11 +56,26 @@
       apt: deb={{ item }} only_upgrade=yes
       with_items:
         - 'http://www.scala-lang.org/files/archive/scala-{{scala_repl_version}}.deb' # scala REPL
-    # intellij-idea
+        
+    # intellij-idea (change indication is suppressed)
     - name: intellij-idea is present
       command: sudo snap install intellij-idea-community --classic
       changed_when: false
-      
+
+    # system monitor
+    - name: system monitor is present
+      apt: name={{ item }} state=present allow_unauthenticated=yes
+      with_items:
+        - chrome-gnome-shell
+        - gir1.2-clutter-1.0
+        - gir1.2-networkmanager-1.0
+        - gir1.2-gtop-2.0 
+        
+    # system monitor hints
+    - name: system monitor hints are displayed
+      command: echo 'Don't forget to install https://addons.mozilla.org/en-US/firefox/addon/gnome-shell-integration/ and then turn on https://extensions.gnome.org/extension/120/system-monitor/'
+      changed_when: false
+
     # other software
     - name: remaining software is present
       apt: name={{ item }} state=present allow_unauthenticated=yes
@@ -76,8 +88,6 @@
         - git
         - guake
         - htop
-        #- indicator-multiload
-        #- intellij-idea-community
         - kdiff3
         - mercurial
         - mongodb
