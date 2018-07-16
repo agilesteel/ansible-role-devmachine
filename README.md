@@ -1,4 +1,4 @@
-# ansible-role-devmachine
+# ansible-role-devmachine (Ubuntu 18.04)
 
 ## install and configure (recommended)
 
