@@ -73,7 +73,7 @@
         
     # system monitor hints
     - debug:
-      msg: echo "Don't forget to install https://addons.mozilla.org/en-US/firefox/addon/gnome-shell-integration/ and then turn on https://extensions.gnome.org/extension/120/system-monitor/"
+      msg: "Don't forget to install https://addons.mozilla.org/en-US/firefox/addon/gnome-shell-integration/ and then turn on https://extensions.gnome.org/extension/120/system-monitor/"
 
     # other software
     - name: remaining software is present
