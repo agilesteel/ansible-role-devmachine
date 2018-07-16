@@ -72,9 +72,8 @@
         - gir1.2-gtop-2.0 
         
     # system monitor hints
-    - name: system monitor hints are displayed
-      command: echo 'Don't forget to install https://addons.mozilla.org/en-US/firefox/addon/gnome-shell-integration/ and then turn on https://extensions.gnome.org/extension/120/system-monitor/'
-      changed_when: false
+    - debug:
+      msg: echo "Don't forget to install https://addons.mozilla.org/en-US/firefox/addon/gnome-shell-integration/ and then turn on https://extensions.gnome.org/extension/120/system-monitor/"
 
     # other software
     - name: remaining software is present
